@@ -38,8 +38,13 @@ export interface DateRange {
   end: Date;
 }
 
+/**
+ * Ends at the last fully-completed month, not the current one: Wikimedia's
+ * pageview counts for the in-progress month are partial and would otherwise
+ * show up as a misleading drop in MoM/YoY growth.
+ */
 export function lastNMonths(n: number, from: Date = new Date()): DateRange {
-  const end = new Date(Date.UTC(from.getUTCFullYear(), from.getUTCMonth(), 1));
+  const end = new Date(Date.UTC(from.getUTCFullYear(), from.getUTCMonth() - 1, 1));
   const start = new Date(Date.UTC(end.getUTCFullYear(), end.getUTCMonth() - (n - 1), 1));
   return { start, end };
 }

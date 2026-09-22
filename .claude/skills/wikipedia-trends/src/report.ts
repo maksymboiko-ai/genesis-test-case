@@ -18,6 +18,8 @@ function flagCaveats(flags: ConfidenceFlags): string[] {
   if (flags.lowVolume) out.push("low absolute traffic — month-to-month noise likely dominates the trend");
   if (flags.hasSpike) out.push("contains a statistical spike — may reflect a single news event, not sustained interest");
   if (flags.hasGaps) out.push("has months with zero recorded views (data gap)");
+  if (flags.trailingMonthLikelyIncomplete)
+    out.push("most recent month's data looks unprocessed/incomplete and was excluded from growth figures");
   return out;
 }
 

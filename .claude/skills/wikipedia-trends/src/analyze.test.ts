@@ -60,6 +60,22 @@ test("does not flag a spike for a smooth series", () => {
   assert.equal(stats.flags.hasSpike, false);
 });
 
+test("flags trailingMonthLikelyIncomplete and excludes it from MoM growth", () => {
+  const pts = series(monthsFrom("2025-01", 8), [1000, 1050, 980, 1020, 1010, 990, 1005, 12]); // last month collapses
+  const stats = analyzeTrend(pts, 8);
+  assert.equal(stats.flags.trailingMonthLikelyIncomplete, true);
+  // MoM should compare the two months before the dropped one, not 12 vs 1005.
+  assert.ok(stats.momGrowthPct !== null && Math.abs(stats.momGrowthPct) < 5);
+  // The raw series for charting still includes the low trailing month.
+  assert.equal(stats.months[stats.months.length - 1].views, 12);
+});
+
+test("does not flag trailingMonthLikelyIncomplete for a normal decline", () => {
+  const pts = series(monthsFrom("2025-01", 8), [1000, 950, 900, 850, 800, 750, 700, 650]);
+  const stats = analyzeTrend(pts, 8);
+  assert.equal(stats.flags.trailingMonthLikelyIncomplete, false);
+});
+
 test("flags gaps when a month has zero views", () => {
   const pts = series(monthsFrom("2025-01", 5), [100, 0, 120, 130, 140]);
   const stats = analyzeTrend(pts, 5);

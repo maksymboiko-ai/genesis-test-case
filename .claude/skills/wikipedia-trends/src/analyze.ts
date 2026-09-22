@@ -9,6 +9,12 @@ export interface ConfidenceFlags {
   hasSpike: boolean;
   /** One or more months in the requested range have no data (zero-filled or missing). */
   hasGaps: boolean;
+  /**
+   * The most recent month's views are implausibly low vs the trailing average —
+   * a sign Wikimedia hasn't finished processing that month yet, even though it's
+   * calendar-complete. Excluded from momGrowthPct/yoyGrowthPct/regression.
+   */
+  trailingMonthLikelyIncomplete: boolean;
 }
 
 export interface TrendStats {
@@ -28,6 +34,7 @@ export interface TrendStats {
 const LOW_VOLUME_THRESHOLD = 500; // avg monthly views below this: too noisy to trust a trend
 const SPIKE_Z_THRESHOLD = 2.5;
 const MIN_MONTHS_FOR_SHORT_HISTORY_FLAG_MARGIN = 1; // tolerate off-by-one at range edges
+const TRAILING_INCOMPLETE_RATIO = 0.25; // last month < 25% of the prior 3-month average -> likely unprocessed yet
 
 function mean(xs: number[]): number {
   return xs.reduce((a, b) => a + b, 0) / xs.length;
@@ -61,6 +68,22 @@ function linearRegression(points: MonthlyPoint[]): { slopePerMonth: number; r2: 
   return { slopePerMonth: slope, r2 };
 }
 
+function median(xs: number[]): number {
+  const sorted = [...xs].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
+}
+
+function trailingMonthIncomplete(sorted: MonthlyPoint[]): boolean {
+  if (sorted.length < 4) return false;
+  const last = sorted[sorted.length - 1].views;
+  // Median (not mean) of the prior 3 months so a single spike month doesn't
+  // distort the baseline this trailing check compares against.
+  const priorMedian = median(sorted.slice(-4, -1).map((p) => p.views));
+  if (priorMedian <= 0) return false;
+  return last / priorMedian < TRAILING_INCOMPLETE_RATIO;
+}
+
 function detectSpikes(points: MonthlyPoint[]): string[] {
   if (points.length < 4) return []; // too few points for a meaningful z-score
   const views = points.map((p) => p.views);
@@ -76,28 +99,34 @@ export function analyzeTrend(points: MonthlyPoint[], expectedMonths: number): Tr
   const totalViews = sorted.reduce((s, p) => s + p.views, 0);
   const meanMonthlyViews = sorted.length > 0 ? totalViews / sorted.length : 0;
 
+  const trailingIncomplete = trailingMonthIncomplete(sorted);
+  // Growth/regression are computed on the "effective" series with a likely-unprocessed
+  // trailing month dropped; `months` (used for charting) still includes it as-is.
+  const effective = trailingIncomplete ? sorted.slice(0, -1) : sorted;
+
   const momGrowthPct =
-    sorted.length >= 2 && sorted[sorted.length - 2].views > 0
-      ? ((sorted[sorted.length - 1].views - sorted[sorted.length - 2].views) /
-          sorted[sorted.length - 2].views) *
+    effective.length >= 2 && effective[effective.length - 2].views > 0
+      ? ((effective[effective.length - 1].views - effective[effective.length - 2].views) /
+          effective[effective.length - 2].views) *
         100
       : null;
 
   const yoyGrowthPct =
-    sorted.length >= 13 && sorted[sorted.length - 13].views > 0
-      ? ((sorted[sorted.length - 1].views - sorted[sorted.length - 13].views) /
-          sorted[sorted.length - 13].views) *
+    effective.length >= 13 && effective[effective.length - 13].views > 0
+      ? ((effective[effective.length - 1].views - effective[effective.length - 13].views) /
+          effective[effective.length - 13].views) *
         100
       : null;
 
-  const regression = linearRegression(sorted);
-  const spikeMonths = detectSpikes(sorted);
+  const regression = linearRegression(effective);
+  const spikeMonths = detectSpikes(effective);
 
   const flags: ConfidenceFlags = {
     shortHistory: sorted.length < expectedMonths - MIN_MONTHS_FOR_SHORT_HISTORY_FLAG_MARGIN,
     lowVolume: meanMonthlyViews < LOW_VOLUME_THRESHOLD,
     hasSpike: spikeMonths.length > 0,
-    hasGaps: sorted.some((p) => p.views === 0),
+    hasGaps: effective.some((p) => p.views === 0),
+    trailingMonthLikelyIncomplete: trailingIncomplete,
   };
 
   return {

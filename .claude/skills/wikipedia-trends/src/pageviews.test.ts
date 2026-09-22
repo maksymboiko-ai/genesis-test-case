@@ -27,11 +27,11 @@ test("toProjectId maps ISO lang codes to Wikimedia project ids", () => {
   assert.equal(toProjectId("uk"), "uk.wikipedia");
 });
 
-test("lastNMonths returns an inclusive UTC month range of the right length", () => {
-  const range = lastNMonths(3, new Date(Date.UTC(2026, 5, 15))); // June 2026
-  assert.equal(range.start.getUTCFullYear(), 2026);
-  assert.equal(range.start.getUTCMonth(), 3); // April (0-indexed)
-  assert.equal(range.end.getUTCMonth(), 5); // June
+test("lastNMonths ends at the last complete month, not the current (partial) one", () => {
+  const range = lastNMonths(3, new Date(Date.UTC(2026, 5, 15))); // "today" is June 2026
+  assert.equal(range.end.getUTCFullYear(), 2026);
+  assert.equal(range.end.getUTCMonth(), 4); // May (0-indexed) -- last complete month
+  assert.equal(range.start.getUTCMonth(), 2); // March: 3-month window ending in May
 });
 
 test("fetchPerArticleMonthly parses REST timestamps into YYYY-MM points", async () => {

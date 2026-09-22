@@ -38,11 +38,11 @@ moving to the next. Commit at each milestone boundary.
       valid, non-trivial PDF for a fixture dataset
 
 ## M4 — CLI + agent-facing contract
-- [ ] `src/cli.ts` subcommands: `resolve-topic`, `analyze`, `compare`,
+- [x] `src/cli.ts` subcommands: `resolve-topic`, `analyze`, `compare`,
       `report`, `analyze-and-report`
-- [ ] JSON in/out, `--help` on every subcommand, actionable validation errors
-- [ ] Ambiguous topic resolution surfaces choices instead of guessing
-- [ ] End-to-end smoke test against live Wikimedia API for one real query
+- [x] JSON in/out, `--help` on every subcommand, actionable validation errors
+- [x] Ambiguous topic resolution surfaces choices instead of guessing
+- [x] End-to-end smoke test against live Wikimedia API for one real query
       (astronomy / ukwiki) — run manually/CI-optional, not part of unit suite
 
 ## M5 — SKILL.md authoring
