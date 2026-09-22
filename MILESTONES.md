@@ -12,15 +12,15 @@ moving to the next. Commit at each milestone boundary.
 - [x] `SKILL.md` skeleton (frontmatter only, body TODO)
 
 ## M1 — Wikimedia data layer
-- [ ] `src/wikidata.ts`: resolve topic → candidate entities → per-language
+- [x] `src/wikidata.ts`: resolve topic → candidate entities → per-language
       article titles via sitelinks; returns disambiguation list when >1
       plausible candidate
-- [ ] `src/pageviews.ts`: fetch per-article monthly pageviews (Wikimedia REST),
+- [x] `src/pageviews.ts`: fetch per-article monthly pageviews (Wikimedia REST),
       with proper `User-Agent`, retry/backoff, date-range handling
-- [ ] `src/pageviews.ts`: fetch project-wide aggregate pageviews (for
+- [x] `src/pageviews.ts`: fetch project-wide aggregate pageviews (for
       normalization baseline)
-- [ ] `src/cache.ts`: disk cache keyed by request signature + TTL
-- [ ] Unit tests with mocked HTTP for all of the above (no live network in CI)
+- [x] `src/cache.ts`: disk cache keyed by request signature + TTL
+- [x] Unit tests with mocked HTTP for all of the above (no live network in CI)
 
 ## M2 — Analysis engine
 - [ ] `src/analyze.ts`: MoM/YoY growth, linear regression slope + R²
