@@ -1,0 +1,27 @@
+{
+  "name": "wikipedia-trends-skill",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Agent Skill: analyze Wikipedia pageview trends across topics/languages and produce a one-page PDF report.",
+  "type": "module",
+  "bin": {
+    "wikipedia-trends": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "node --import tsx --test src/**/*.test.ts",
+    "cli": "tsx src/cli.ts"
+  },
+  "dependencies": {
+    "pdfkit": "^0.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.0",
+    "@types/pdfkit": "^0.13.4",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

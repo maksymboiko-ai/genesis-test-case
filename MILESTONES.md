@@ -5,11 +5,11 @@ Each milestone must leave the repo in a building, committed state before
 moving to the next. Commit at each milestone boundary.
 
 ## M0 — Repo scaffold
-- [ ] `.gitignore` (node_modules, dist, cache/*.json, eval/results/*)
-- [ ] `package.json`, `tsconfig.json` under `.claude/skills/wikipedia-trends/`
-- [ ] `npm run build` and `npm test` wired (even with 0 tests) and green
-- [ ] `AGENTS.md` at repo root pointing to the skill
-- [ ] `SKILL.md` skeleton (frontmatter only, body TODO)
+- [x] `.gitignore` (node_modules, dist, cache/*.json, eval/results/*)
+- [x] `package.json`, `tsconfig.json` under `.claude/skills/wikipedia-trends/`
+- [x] `npm run build` and `npm test` wired (even with 0 tests) and green
+- [x] `AGENTS.md` at repo root pointing to the skill
+- [x] `SKILL.md` skeleton (frontmatter only, body TODO)
 
 ## M1 — Wikimedia data layer
 - [ ] `src/wikidata.ts`: resolve topic → candidate entities → per-language
