@@ -23,11 +23,11 @@ moving to the next. Commit at each milestone boundary.
 - [x] Unit tests with mocked HTTP for all of the above (no live network in CI)
 
 ## M2 — Analysis engine
-- [ ] `src/analyze.ts`: MoM/YoY growth, linear regression slope + R²
-- [ ] confidence flags: short-history, low-volume, spike (z-score), data gaps
-- [ ] normalization vs project-wide baseline
-- [ ] multi-series comparison (cross-language and/or cross-topic)
-- [ ] unit tests with synthetic series covering each flag condition
+- [x] `src/analyze.ts`: MoM/YoY growth, linear regression slope + R²
+- [x] confidence flags: short-history, low-volume, spike (z-score), data gaps
+- [x] normalization vs project-wide baseline
+- [x] multi-series comparison (cross-language and/or cross-topic)
+- [x] unit tests with synthetic series covering each flag condition
 
 ## M3 — Reporting
 - [ ] `src/chart.ts`: vector line-chart primitives drawn via pdfkit (no
