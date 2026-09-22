@@ -30,11 +30,11 @@ moving to the next. Commit at each milestone boundary.
 - [x] unit tests with synthetic series covering each flag condition
 
 ## M3 — Reporting
-- [ ] `src/chart.ts`: vector line-chart primitives drawn via pdfkit (no
+- [x] `src/chart.ts`: vector line-chart primitives drawn via pdfkit (no
       native deps)
-- [ ] `src/report.ts`: one-page PDF — headline numbers, chart(s), a visible
+- [x] `src/report.ts`: one-page PDF — headline numbers, chart(s), a visible
       "assumptions & limitations" section sourced from the confidence flags
-- [ ] Golden-file/smoke test: report generation doesn't throw and produces a
+- [x] Golden-file/smoke test: report generation doesn't throw and produces a
       valid, non-trivial PDF for a fixture dataset
 
 ## M4 — CLI + agent-facing contract
