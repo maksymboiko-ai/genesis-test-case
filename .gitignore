@@ -1,0 +1,7 @@
+node_modules/
+dist/
+*.log
+.claude/skills/wikipedia-trends/cache/*.json
+.claude/skills/wikipedia-trends/eval/results/*
+!.claude/skills/wikipedia-trends/cache/.gitkeep
+!.claude/skills/wikipedia-trends/eval/results/.gitkeep
