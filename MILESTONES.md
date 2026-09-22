@@ -46,13 +46,13 @@ moving to the next. Commit at each milestone boundary.
       (astronomy / ukwiki) — run manually/CI-optional, not part of unit suite
 
 ## M5 — SKILL.md authoring
-- [ ] Frontmatter `name`/`description` tuned to trigger on: topic-interest
+- [x] Frontmatter `name`/`description` tuned to trigger on: topic-interest
       research, language/locale rollout decisions, Wikipedia pageview trends
-- [ ] Body: step-by-step workflow, how to turn a vague ask into CLI calls,
+- [x] Body: step-by-step workflow, how to turn a vague ask into CLI calls,
       how to fold confidence flags into the written conclusion, how to handle
       follow-ups cheaply (reuse cache/prior JSON instead of re-fetching)
-- [ ] Worked example for each of the task's 3 sample prompts
-- [ ] `AGENTS.md` body finalized to match
+- [x] Worked example for each of the task's 3 sample prompts
+- [x] `AGENTS.md` body finalized to match
 
 ## M6 — Eval harness (OpenRouter, skill vs no-skill)
 - [ ] `eval/cases/*.json`: test cases (the 3 sample prompts + ambiguous-topic
