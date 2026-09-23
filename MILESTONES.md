@@ -66,8 +66,13 @@ moving to the next. Commit at each milestone boundary.
       to `eval/results/`
 
 ## M7 — Iterate to a pass bar
-- [ ] Read eval failures, patch `SKILL.md` wording and/or CLI ergonomics
-- [ ] Re-run eval, confirm improvement, repeat until skill-vs-no-skill gap is
-      clear and cheap models pass reliably
-- [ ] `FUTURE_WORK.md`: how to extend to daily granularity, larger topic/lang
+- [x] Read eval failures, patch `SKILL.md` wording and/or CLI ergonomics
+      (patched eval harness: agent-loop turn-cap now forces a synthesized
+      final answer instead of returning raw tool JSON; broadened the
+      caveat-detection regex; both were harness/scorer bugs, not skill bugs)
+- [x] Re-run eval, confirm improvement, repeat until skill-vs-no-skill gap is
+      clear and cheap models pass reliably (final run: 0% errored, 92% of
+      skill-condition runs grounded in real fetched data vs 0% for no-skill,
+      67% vs 33% mentioning caveats -- see eval/results/2026-09-23T05-34-49-939Z)
+- [x] `FUTURE_WORK.md`: how to extend to daily granularity, larger topic/lang
       matrices, dashboards, more eval models/cases

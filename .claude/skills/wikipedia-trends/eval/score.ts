@@ -26,7 +26,7 @@ export interface ScoreResult {
 }
 
 const CAVEAT_WORDS =
-  /\b(caveat|however|but note|low.confidence|low.volume|noisy|spike|limited data|small sample|not (?:fully )?reliable|take .* with|uncertain|hard to trust|should be cautious|grain of salt|incomplete|недостат|обереж)\b/i;
+  /\b(caveat|however|but note|low.confidence|low.volume|noisy|spike|limited data|small sample|not (?:fully )?reliable|not meaningfully|should not rely|surface.level|take .* with|uncertain|hard to trust|should be cautious|grain of salt|incomplete|недостат|обереж)\b/i;
 
 const QUANTIFIED_TREND = /-?\d+(\.\d+)?\s?%/;
 

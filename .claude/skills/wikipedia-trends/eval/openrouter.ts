@@ -126,6 +126,23 @@ export async function runAgentLoop(
     }
   }
 
-  const last = transcript[transcript.length - 1];
-  return { transcript, toolCallCount, totalTokens, finalText: typeof last?.content === "string" ? last.content : "" };
+  // Hit the turn cap mid-tool-use: the last message is raw tool output, not
+  // a synthesized answer. Force one more call with tools disabled so the
+  // model has to write an actual summary instead of us treating JSON dump
+  // as the "final answer".
+  transcript.push({
+    role: "user",
+    content:
+      "You've used up your available tool calls. Write your final answer now, in plain language, using whatever data you've already gathered.",
+  });
+  const finalResp = await chatCompletion(apiKey, model, transcript, undefined);
+  totalTokens += finalResp.usage?.total_tokens ?? 0;
+  const finalMessage = finalResp.choices[0]?.message;
+  if (finalMessage) transcript.push(finalMessage);
+  return {
+    transcript,
+    toolCallCount,
+    totalTokens,
+    finalText: typeof finalMessage?.content === "string" ? finalMessage.content : "",
+  };
 }
