@@ -4,5 +4,6 @@
   "turns": [
     "We're building a language-learning app. Compare interest in learning English across Polish, Czech, Ukrainian, German and Spanish Wikipedia, and prepare a short report on which audiences we should investigate next and why."
   ],
-  "notes": "From the task brief. Five languages -- expect the agent to rank by normalized growth rather than raw views (which would just favor the largest editions), and to name specific next-step audiences with reasons."
+  "notes": "From the task brief. Five languages -- expect the agent to rank by normalized growth rather than raw views (which would just favor the largest editions), and to name specific next-step audiences with reasons.",
+  "groundTruth": { "topic": "English language", "langs": ["pl", "cs", "uk", "de", "es"], "months": 24 }
 }

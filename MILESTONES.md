@@ -76,3 +76,26 @@ moving to the next. Commit at each milestone boundary.
       67% vs 33% mentioning caveats -- see eval/results/2026-09-23T05-34-49-939Z)
 - [x] `FUTURE_WORK.md`: how to extend to daily granularity, larger topic/lang
       matrices, dashboards, more eval models/cases
+
+## M8 — Tiered eval: ground truth, rubric, LLM-judge
+- [x] Add `groundTruth: {topic, langs, months}` to each eval case; compute it
+      by calling this project's own wikidata/pageviews/analyze modules
+      directly (not the CLI subprocess) so it's the authoritative reference
+- [x] Tier 1 (deterministic, no AI): directional correctness -- does the
+      model's stated growth direction match the ground truth's sign; does a
+      stated percentage fall within tolerance
+- [x] Tier 2 (rubric, no AI): ambiguity-handling check (did the *final answer*
+      disclose the ambiguity, not just whether the tool signaled it) and
+      flags-surfaced check (did it actually fetch data carrying the expected
+      confidence flags)
+- [x] Tier 3 (LLM-judge): `eval/judge.ts` calling `anthropic/claude-sonnet-5`
+      via OpenRouter (reuses the existing key, keeps `npm run eval` fully
+      unattended) with a fixed rubric (factual accuracy, caveat
+      appropriateness, actionability), scoring only the final answer + ground
+      truth (not the full transcript)
+- [x] Add `anthropic/claude-haiku-4.5` to the tested-model pool (the model
+      the task brief explicitly names as the target tier)
+- [x] Re-run the full matrix with the new scoring tiers; commit results
+      (36 runs, 0% errored, judge avg 4.6/4.2/3.3 skill vs 1.3/1.8/1.9
+      no-skill on factualAccuracy/caveatAppropriateness/actionability --
+      eval/results/2026-09-23T08-00-55-397Z)

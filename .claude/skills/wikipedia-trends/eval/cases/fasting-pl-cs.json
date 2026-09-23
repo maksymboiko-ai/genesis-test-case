@@ -4,5 +4,6 @@
   "turns": [
     "Compare growth of interest in intermittent fasting in Polish and Czech Wikipedia over the last two years."
   ],
-  "notes": "From the task brief. Expect a cross-language comparison, ideally normalized (share-of-traffic), not just raw views."
+  "notes": "From the task brief. Expect a cross-language comparison, ideally normalized (share-of-traffic), not just raw views.",
+  "groundTruth": { "topic": "intermittent fasting", "langs": ["pl", "cs"], "months": 24 }
 }

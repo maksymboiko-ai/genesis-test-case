@@ -4,6 +4,8 @@ import { loadEnvFile } from "./env.js";
 import { runAgentLoop, type ChatMessage } from "./openrouter.js";
 import { bashTool, makeBashExecutor } from "./tools.js";
 import { scoreRun, renderMarkdownTable, type RunOutcome, type ScoreResult } from "./score.js";
+import { computeGroundTruth, type GroundTruth, type GroundTruthSpec } from "./groundtruth.js";
+import { judgeAnswer, DEFAULT_JUDGE_MODEL } from "./judge.js";
 
 loadEnvFile();
 
@@ -16,6 +18,8 @@ interface Case {
   category: string;
   turns: string[];
   notes: string;
+  groundTruth?: GroundTruthSpec;
+  expectAmbiguityHandling?: boolean;
 }
 
 function loadCases(): Case[] {
@@ -77,6 +81,25 @@ async function runCase(
   }
 }
 
+/** Ground truth is independent of model/condition -- computed once per case, reused across the whole matrix. */
+async function computeAllGroundTruth(cases: Case[]): Promise<Map<string, GroundTruth | null>> {
+  const map = new Map<string, GroundTruth | null>();
+  for (const testCase of cases) {
+    if (!testCase.groundTruth) {
+      map.set(testCase.id, null);
+      continue;
+    }
+    console.error(`Computing ground truth for ${testCase.id}...`);
+    try {
+      map.set(testCase.id, await computeGroundTruth(testCase.groundTruth));
+    } catch (err) {
+      console.error(`  -> ground truth failed: ${err instanceof Error ? err.message : String(err)}`);
+      map.set(testCase.id, null);
+    }
+  }
+  return map;
+}
+
 async function main(): Promise<void> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
@@ -85,14 +108,18 @@ async function main(): Promise<void> {
     return;
   }
 
-  const models = (process.env.EVAL_MODELS ?? "openai/gpt-4o-mini,google/gemini-3.8-flash")
+  const models = (process.env.EVAL_MODELS ?? "openai/gpt-4o-mini,google/gemini-3.8-flash,anthropic/claude-haiku-4.5")
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
+  const judgeModel = process.env.JUDGE_MODEL ?? DEFAULT_JUDGE_MODEL;
+  const skipJudge = process.env.EVAL_SKIP_JUDGE === "true";
   const cases = loadCases();
   const onlyCase = process.argv[2]; // optional: run a single case id for quick iteration
 
   mkdirSync(RESULTS_DIR, { recursive: true });
+
+  const groundTruthByCase = await computeAllGroundTruth(onlyCase ? cases.filter((c) => c.id === onlyCase) : cases);
 
   const scores: ScoreResult[] = [];
   const rawRuns: RunOutcome[] = [];
@@ -107,7 +134,21 @@ async function main(): Promise<void> {
           console.error(`  -> errored: ${outcome.errorMessage}`);
         }
         rawRuns.push(outcome);
-        scores.push(scoreRun(outcome));
+
+        const groundTruth = groundTruthByCase.get(testCase.id) ?? null;
+        const score = scoreRun(outcome, groundTruth, testCase.expectAmbiguityHandling);
+
+        if (!skipJudge && !outcome.errored) {
+          score.judge = await judgeAnswer(
+            apiKey,
+            testCase.turns.join("\n"),
+            outcome.finalText,
+            groundTruth,
+            judgeModel,
+          );
+        }
+
+        scores.push(score);
       }
     }
   }
@@ -122,6 +163,8 @@ async function main(): Promise<void> {
       {
         generatedAt: timestamp,
         models,
+        judgeModel: skipJudge ? null : judgeModel,
+        groundTruth: Object.fromEntries(groundTruthByCase),
         scores,
         runs: rawRuns.map((r) => ({ ...r, transcript: r.transcript.map((m) => ({ role: m.role, content: m.content })) })),
       },
@@ -134,6 +177,7 @@ async function main(): Promise<void> {
     `# Eval results — ${timestamp}`,
     "",
     `Models: ${models.join(", ")}`,
+    `Judge: ${skipJudge ? "skipped" : judgeModel}`,
     "",
     renderMarkdownTable(scores),
     "",
@@ -143,7 +187,10 @@ async function main(): Promise<void> {
       const subset = scores.filter((s) => s.condition === cond);
       const pct = (fn: (s: ScoreResult) => boolean) =>
         subset.length ? Math.round((subset.filter(fn).length / subset.length) * 100) : 0;
-      return `- **${cond}**: ${subset.length} runs · used real data: ${pct((s) => s.usedRealData)}% · mentions caveats: ${pct((s) => s.mentionsCaveats)}% · errored: ${pct((s) => s.errored)}%`;
+      const judged = subset.filter((s) => s.judge);
+      const avg = (fn: (j: NonNullable<ScoreResult["judge"]>) => number) =>
+        judged.length ? (judged.reduce((sum, s) => sum + fn(s.judge!), 0) / judged.length).toFixed(1) : "n/a";
+      return `- **${cond}**: ${subset.length} runs · used real data: ${pct((s) => s.usedRealData)}% · errored: ${pct((s) => s.errored)}% · judge avg factualAccuracy: ${avg((j) => j.factualAccuracy)} · caveatAppropriateness: ${avg((j) => j.caveatAppropriateness)} · actionability: ${avg((j) => j.actionability)}`;
     }),
   ].join("\n");
   writeFileSync(mdPath, summary);

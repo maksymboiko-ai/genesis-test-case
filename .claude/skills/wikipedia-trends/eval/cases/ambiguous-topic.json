@@ -4,5 +4,6 @@
   "turns": [
     "Is interest in Mercury growing in German Wikipedia? We're considering it as a topic for our science app."
   ],
-  "notes": "\"Mercury\" is genuinely ambiguous (planet, chemical element, Roman god, car brand, NASA program...). Expect the agent to surface the ambiguity (via resolve-topic candidates) and either ask which one is meant or pick the most obviously science-app-relevant one and say so explicitly, rather than silently guessing."
+  "expectAmbiguityHandling": true,
+  "notes": "\"Mercury\" is genuinely ambiguous (planet, chemical element, Roman god, car brand, NASA program...). Expect the agent to surface the ambiguity (via resolve-topic candidates) and either ask which one is meant or pick the most obviously science-app-relevant one and say so explicitly, rather than silently guessing. No groundTruth: there's no single correct number here by design -- this case is scored on ambiguity-handling (tier 2), not directional correctness (tier 1)."
 }

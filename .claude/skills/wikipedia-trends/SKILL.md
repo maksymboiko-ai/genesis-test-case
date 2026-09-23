@@ -58,9 +58,16 @@ code, don't guess from prose.
    also a common noun, etc).
 3. **If the result's `ambiguous` field is true or `unresolvedLangs` is
    non-empty**, don't silently pick a candidate or drop a language —
-   surface it: run `resolve-topic` to show the candidates/what's missing,
-   and ask the user to confirm, unless one candidate is obviously the
-   intended concept (matching label, on-topic description).
+   surface it. If it's genuinely unclear which concept is meant, run
+   `resolve-topic` to show the candidates and ask the user to confirm. If one
+   candidate is obviously the intended concept (matching label, on-topic
+   description), you can proceed without asking, but **your final answer
+   must still say, in one sentence, that the topic name was ambiguous and
+   which interpretation you used** (e.g. "Note: 'Mercury' could also refer
+   to the chemical element or Roman god; this analysis uses the planet.").
+   Getting `ambiguous: true` back from the tool and not mentioning it
+   anywhere in your answer is always wrong, even when you're confident in
+   the interpretation you picked.
 4. **Read the `flags` in the result before writing anything about
    trust.** Every entry carries:
    - `shortHistory` — less data than the requested lookback; the article
