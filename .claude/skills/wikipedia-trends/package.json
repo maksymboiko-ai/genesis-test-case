@@ -10,7 +10,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "node --import tsx --test src/**/*.test.ts",
-    "cli": "tsx src/cli.ts"
+    "cli": "tsx src/cli.ts",
+    "eval": "tsx eval/run.ts"
   },
   "dependencies": {
     "pdfkit": "^0.15.0"

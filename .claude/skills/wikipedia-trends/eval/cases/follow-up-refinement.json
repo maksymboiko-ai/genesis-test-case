@@ -1,0 +1,9 @@
+{
+  "id": "follow-up-refinement",
+  "category": "follow-up",
+  "turns": [
+    "Is interest in astronomy growing in Ukrainian Wikipedia over the last two years?",
+    "Good, now also add Polish Wikipedia to the comparison and extend the window to 3 years."
+  ],
+  "notes": "Second turn should reuse the first turn's Ukrainian data (cache hit, few/no redundant tool calls for that part) rather than re-deriving everything from scratch, while still fetching the new Polish data and the extended range."
+}

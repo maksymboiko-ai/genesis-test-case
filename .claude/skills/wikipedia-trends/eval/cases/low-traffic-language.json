@@ -1,0 +1,8 @@
+{
+  "id": "low-traffic-language",
+  "category": "edge-case",
+  "turns": [
+    "Is interest in chess growing in Icelandic Wikipedia? We're deciding whether to localize our chess app into Icelandic."
+  ],
+  "notes": "Icelandic Wikipedia (is) is a small edition; even a well-established topic there should trip the lowVolume confidence flag given the edition's small audience. Expect the agent to explicitly say the signal is noisy/low-confidence rather than reporting a percentage with unwarranted confidence. (An earlier version of this case used 'quantum computing', which has no Icelandic article at all -- a different, less useful edge case -- swapped to 'chess', confirmed to resolve to is.wikipedia's 'Skák'.)"
+}

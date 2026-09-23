@@ -6,8 +6,9 @@
 const DEFAULT_CONTACT = "no-contact-set";
 const USER_AGENT = `wikipedia-trends-skill/0.1 (contact: ${process.env.WIKIPEDIA_TRENDS_CONTACT ?? DEFAULT_CONTACT})`;
 
-const MAX_RETRIES = 3;
+const MAX_RETRIES = 5;
 const RETRY_BASE_DELAY_MS = 500;
+const MAX_RETRY_DELAY_MS = 8000;
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -35,7 +36,11 @@ export async function fetchJson<T>(url: string): Promise<T> {
         throw new HttpError(404, url, "Not found");
       }
       if (res.status === 429 || res.status >= 500) {
-        throw new HttpError(res.status, url, `Retryable status ${res.status}`);
+        const retryAfterHeader = res.headers.get("Retry-After");
+        const retryAfterMs = retryAfterHeader ? Number(retryAfterHeader) * 1000 : undefined;
+        const err = new HttpError(res.status, url, `Retryable status ${res.status}`);
+        (err as HttpError & { retryAfterMs?: number }).retryAfterMs = retryAfterMs;
+        throw err;
       }
       if (!res.ok) {
         throw new HttpError(res.status, url, `Request failed with status ${res.status}`);
@@ -47,10 +52,20 @@ export async function fetchJson<T>(url: string): Promise<T> {
         throw err; // not retryable
       }
       if (attempt < MAX_RETRIES) {
-        await sleep(RETRY_BASE_DELAY_MS * 2 ** attempt);
+        const explicit = (err as HttpError & { retryAfterMs?: number })?.retryAfterMs;
+        const backoff = Math.min(RETRY_BASE_DELAY_MS * 2 ** attempt, MAX_RETRY_DELAY_MS);
+        const jitter = Math.random() * backoff * 0.3;
+        await sleep(explicit ?? backoff + jitter);
         continue;
       }
     }
+  }
+  if (lastError instanceof HttpError && lastError.status === 429) {
+    throw new HttpError(
+      429,
+      url,
+      "Wikimedia rate-limited this request even after retries. Wait a bit and try again, or reduce how many languages/topics you're fetching at once.",
+    );
   }
   throw lastError;
 }

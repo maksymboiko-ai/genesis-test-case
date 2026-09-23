@@ -55,14 +55,14 @@ moving to the next. Commit at each milestone boundary.
 - [x] `AGENTS.md` body finalized to match
 
 ## M6 — Eval harness (OpenRouter, skill vs no-skill)
-- [ ] `eval/cases/*.json`: test cases (the 3 sample prompts + ambiguous-topic
+- [x] `eval/cases/*.json`: test cases (the 3 sample prompts + ambiguous-topic
       + low-traffic-language + follow-up-refinement cases)
-- [ ] `eval/run.ts`: drives a cheap tool-calling model via OpenRouter with a
+- [x] `eval/run.ts`: drives a cheap tool-calling model via OpenRouter with a
       shell/bash tool, twice per case (skill present / absent)
-- [ ] `eval/score.ts`: grounded-data check (no hallucinated numbers), caveat
-      presence, tool-call/token efficiency, directional correctness vs
-      independently computed ground truth
-- [ ] Run end-to-end on 2-3 cheap/free OpenRouter models; write results table
+- [x] `eval/score.ts`: grounded-data check (no hallucinated numbers), caveat
+      presence, tool-call/token efficiency (directional correctness vs an
+      independent ground truth deferred to M7 -- see FUTURE_WORK)
+- [x] Run end-to-end on 2-3 cheap/free OpenRouter models; write results table
       to `eval/results/`
 
 ## M7 — Iterate to a pass bar

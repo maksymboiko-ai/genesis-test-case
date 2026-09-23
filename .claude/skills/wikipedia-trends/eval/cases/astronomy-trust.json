@@ -1,0 +1,8 @@
+{
+  "id": "astronomy-trust",
+  "category": "sample-prompt",
+  "turns": [
+    "We're thinking about adding an astronomy course to our education app. Is interest in astronomy growing in Ukrainian Wikipedia, and how much can we trust that growth?"
+  ],
+  "notes": "From the task brief. Explicitly asks for a trust assessment -- the answer must foreground confidence/data-quality caveats, not just report a percentage."
+}
