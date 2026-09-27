@@ -232,6 +232,21 @@ Warning: the eval lets a remote model run shell commands through a bash tool
 guarded only by a denylist, with no container isolation. Run it supervised, on a
 machine you are comfortable with.
 
+## How we built it
+
+1. **Architecture first.** Before writing any code, we fixed the design in
+   `docs/ARCHITECTURE.md`: a portable skill folder, a plain Node CLI, PDF
+   rendering in pure JS, and an eval comparing runs with and without the skill.
+2. **Milestones as specifications.** `docs/MILESTONES.md` splits the work into
+   small checklist items, each with a check that proves it is done. They run
+   from the project scaffold (M0) to the tiered eval (M8).
+3. **A self-measuring loop.** `docs/LOOP_PROMPT.md` drives an agent through the
+   milestones one item at a time. For each item it implements, verifies (build,
+   tests, live data, eval runs), ticks the box and commits, until every item is
+   done. It stops only for decisions it can't make alone, such as API keys.
+   Testing against live data and the eval caught real bugs that unit tests
+   missed; `docs/FUTURE_WORK.md` records them.
+
 ## More documentation
 
 - `SKILL.md`: the agent-facing workflow
