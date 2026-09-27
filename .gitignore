@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+*.env
+*.log
+/wikipedia-trends/cache/*.json
+!/wikipedia-trends/cache/.gitkeep
+# ad-hoc PDF reports generated while testing the CLI/eval by hand
+/wikipedia-trends/*.pdf
+/wikipedia-trends/eval/*.pdf

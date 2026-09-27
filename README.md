@@ -9,13 +9,13 @@ can share.
 > Pageviews measure interest in an article, not willingness to pay. Treat the
 > output as a signal for what to validate next, not a decision by itself.
 
-![Line chart of monthly astronomy pageviews per million views of each edition, Polish vs Ukrainian Wikipedia, September 2024 to August 2026. Ukrainian starts high at about 63 and falls to about 7; Polish stays between about 5 and 17.](assets/example-trend.svg)
+![Line chart of monthly astronomy pageviews per million views of each edition, Polish vs Ukrainian Wikipedia, September 2024 to August 2026. Ukrainian starts high at about 63 and falls to about 7; Polish stays between about 5 and 17.](wikipedia-trends/docs/images/example-trend.svg)
 
 This is the kind of trend the skill works from, here with real data for
 astronomy in Polish and Ukrainian Wikipedia. The skill turns it into numbers
 with caveats. In this case: down about 5% year over year in both editions,
 with a spike month in each, so neither is a reliable growth story. See the
-[example one-page report](assets/example-report.pdf) it generates.
+[example one-page report](wikipedia-trends/docs/images/example-report.pdf) it generates.
 
 ## What you can ask
 
@@ -34,7 +34,7 @@ with a spike month in each, so neither is a reliable growth story. See the
 
 ## Setup
 
-Run every command in this README from this folder, the skill directory.
+Run every command in this README from the skill directory, `wikipedia-trends/`.
 
 ```bash
 npm install
@@ -43,10 +43,10 @@ npm run build
 
 ## Using it with an agent
 
-This folder is a self-contained [Agent Skill](https://agentskills.io/specification):
+`wikipedia-trends/` is a self-contained [Agent Skill](https://agentskills.io/specification):
 `SKILL.md` teaches the agent the workflow, and a plain Node CLI does the data
 work, so any agent that can run shell commands can use it. Agents discover
-skills by folder, so install it by copying this folder into your agent's
+skills by folder, so install it by copying that folder into your agent's
 skills directory, then run the setup above in the copy:
 
 ```bash
@@ -56,7 +56,7 @@ cp -r wikipedia-trends ~/.agents/skills/    # Codex, Cursor, Gemini CLI, Copilot
 
 For a single project, use `<project>/.claude/skills/` or
 `<project>/.agents/skills/` instead. Agents that read `AGENTS.md` also work
-when started inside this folder: `AGENTS.md` points them at `SKILL.md`.
+when started inside `wikipedia-trends/`: `AGENTS.md` points them at `SKILL.md`.
 
 Tips for good answers:
 
@@ -170,7 +170,7 @@ small language edition, and a follow-up) on three cheap models, once with the
 skill and once without, and scored every answer. See
 [Evaluation benchmark](#evaluation-benchmark) for how.
 
-![Grouped bar chart of LLM-judge scores from 1 to 5. Factual accuracy: 4.5 with the skill vs 1.3 without. Caveat appropriateness: 4.4 vs 2.0. Actionability: 3.2 vs 1.7.](assets/eval-judge-scores.svg)
+![Grouped bar chart of LLM-judge scores from 1 to 5. Factual accuracy: 4.5 with the skill vs 1.3 without. Caveat appropriateness: 4.4 vs 2.0. Actionability: 3.2 vs 1.7.](wikipedia-trends/docs/images/eval-judge-scores.svg)
 
 | Metric | With skill | Without skill |
 |---|---|---|
@@ -185,7 +185,7 @@ The direction row is the starkest. Most of these topics are declining year over
 year. Without the skill, models answered from memory, said "growing", and were
 wrong every time they stated a direction.
 
-![Grouped bar chart of the mean judge score per model. gpt-4o-mini: 3.7 with the skill vs 1.2 without. gemini-3.8-flash: 3.9 vs 1.8. claude-haiku-4.5: 4.5 vs 2.1.](assets/eval-by-model.svg)
+![Grouped bar chart of the mean judge score per model. gpt-4o-mini: 3.7 with the skill vs 1.2 without. gemini-3.8-flash: 3.9 vs 1.8. claude-haiku-4.5: 4.5 vs 2.1.](wikipedia-trends/docs/images/eval-by-model.svg)
 
 | Model | With skill | Without skill |
 |---|---|---|
@@ -224,7 +224,7 @@ independently from live data, rubric checks (ambiguity disclosure, flags
 surfaced), and an LLM judge scoring factual accuracy, caveat appropriateness and
 actionability. Results are written to `eval/results/`.
 
-After a new run, regenerate the charts and example report in `assets/` with
+After a new run, regenerate the charts and example report in `docs/images/` with
 `npm run docs:charts`. It uses the latest judged results file and live data for
 the example.
 
@@ -249,15 +249,16 @@ machine you are comfortable with.
 
 ## More documentation
 
-- `SKILL.md`: the agent-facing workflow
-- `references/output-schema.md`: every field of the CLI's JSON output
-- `docs/ARCHITECTURE.md`: design decisions
-- `docs/FUTURE_WORK.md`: known limitations and how to extend the skill
-- `docs/MILESTONES.md`: build plan and status
-- `docs/LOOP_PROMPT.md`: the prompt used to build the skill milestone by milestone
+- [`SKILL.md`](wikipedia-trends/SKILL.md): the agent-facing workflow
+- [`references/output-schema.md`](wikipedia-trends/references/output-schema.md): every field of the CLI's JSON output
+- [`docs/ARCHITECTURE.md`](wikipedia-trends/docs/ARCHITECTURE.md): design decisions
+- [`docs/FUTURE_WORK.md`](wikipedia-trends/docs/FUTURE_WORK.md): known limitations and how to extend the skill
+- [`docs/MILESTONES.md`](wikipedia-trends/docs/MILESTONES.md): build plan and status
+- [`docs/LOOP_PROMPT.md`](wikipedia-trends/docs/LOOP_PROMPT.md): the prompt used to build the skill milestone by milestone
 
-Folder layout, per the [Agent Skills specification](https://agentskills.io/specification):
+Folder layout of `wikipedia-trends/`, per the
+[Agent Skills specification](https://agentskills.io/specification):
 `scripts/` holds the CLI source the agent runs (built to `dist/`),
-`references/` docs the agent reads on demand, `assets/` example outputs and
-charts, `tests/` unit tests, `eval/` the benchmark harness, and `docs/`
-project documentation for humans.
+`references/` docs the agent reads on demand, `tests/` unit tests, `eval/` the
+benchmark harness, and `docs/` project documentation for humans, including the
+README's charts and example report in `docs/images/`.

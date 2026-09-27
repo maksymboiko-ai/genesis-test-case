@@ -11,7 +11,7 @@ import { generateReport } from "../scripts/report.js";
 
 const SKILL_DIR = join(import.meta.dirname, "..");
 const RESULTS_DIR = join(SKILL_DIR, "eval", "results");
-const DOCS_DIR = join(SKILL_DIR, "assets");
+const DOCS_DIR = join(SKILL_DIR, "docs", "images");
 
 // Reference palette (validated light + dark with the dataviz validator).
 const STYLE = `<style>
