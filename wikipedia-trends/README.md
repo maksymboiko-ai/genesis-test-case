@@ -234,7 +234,15 @@ machine you are comfortable with.
 
 ## More documentation
 
-- `ARCHITECTURE.md`: design decisions
-- `MILESTONES.md`: build plan and status
-- `FUTURE_WORK.md`: known limitations and how to extend the skill
 - `SKILL.md`: the agent-facing workflow
+- `references/output-schema.md`: every field of the CLI's JSON output
+- `docs/ARCHITECTURE.md`: design decisions
+- `docs/FUTURE_WORK.md`: known limitations and how to extend the skill
+- `docs/MILESTONES.md`: build plan and status
+- `docs/LOOP_PROMPT.md`: the prompt used to build the skill milestone by milestone
+
+Folder layout, per the [Agent Skills specification](https://agentskills.io/specification):
+`scripts/` holds the CLI source the agent runs (built to `dist/`),
+`references/` docs the agent reads on demand, `assets/` example outputs and
+charts, `tests/` unit tests, `eval/` the benchmark harness, and `docs/`
+project documentation for humans.

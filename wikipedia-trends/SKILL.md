@@ -46,6 +46,10 @@ All subcommands print JSON to stdout on success and a one-line `Error:
 ...` to stderr with a non-zero exit code on failure — check the exit
 code, don't guess from prose.
 
+Read `references/output-schema.md` when you need a field this file doesn't
+cover, such as the per-month series, regression slope/R², or the
+`resolve-topic` candidate format.
+
 ## Workflow
 
 1. **Turn the product question into topic + language codes.** Language
@@ -97,8 +101,10 @@ code, don't guess from prose.
    views, when comparing across languages or making a "is this really
    growing" judgment.** A raw increase can just mean that language
    edition's overall traffic grew. The report's second chart and the
-   `trend.normalized` stats in the JSON already control for this — lead
-   with normalized growth when the two disagree.
+   `trend.normalized` stats in `analyze`/`compare` JSON already control for
+   this — lead with normalized growth when the two disagree.
+   `analyze-and-report` prints raw growth only; run `analyze` with the same
+   flags (cached) to quote normalized numbers.
 6. **For follow-ups and refinements** ("now also check Czech", "extend
    to 3 years", "what about a related topic"), just make the new CLI
    call with the adjusted flags — repeated (topic, lang, month-count)
