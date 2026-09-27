@@ -8,19 +8,21 @@ data — usable well by a cheap/fast tool-calling model (Haiku 4.5-class), and
 portable beyond Claude Code.
 
 ## Placement & portability
-Single self-contained directory: `.claude/skills/wikipedia-trends/`.
-- `SKILL.md` — Anthropic Agent Skill frontmatter + instructions. Auto-discovered
-  by Claude Code / Claude Desktop / claude.ai skill upload.
+Single self-contained directory, `wikipedia-trends/`, laid out per the
+[Agent Skills specification](https://agentskills.io/specification). The folder
+is the deliverable: it is installed by copying it into an agent's skills
+directory (`~/.claude/skills/`, `~/.agents/skills/`, or the project-level
+equivalents).
+- `SKILL.md` — spec frontmatter + instructions, discovered by any Agent
+  Skills client (Claude Code, Codex, Cursor, Gemini CLI, Copilot, ...).
 - Everything the skill needs to *do real work* is a plain Node/TypeScript CLI
   inside that same directory (`src/cli.ts` → built to `dist/cli.js`), invoked
   via ordinary shell commands (`node dist/cli.js <subcommand> ...`). It has no
   dependency on any Claude-specific tool — any agent that can run shell
-  commands (Cursor, Codex CLI, Cline, Windsurf, etc.) can drive it.
-- A root-level `AGENTS.md` (the emerging cross-tool convention Codex/Cursor/Amp
-  already read) points at the skill directory and gives the same CLI
-  invocation instructions in a tool-agnostic form, so the *same* skill works
-  without Claude Code at all — only `SKILL.md`'s YAML frontmatter is
-  Claude-specific; the instructional body doubles as `AGENTS.md` content.
+  commands can drive it.
+- `AGENTS.md` inside the skill gives the same CLI invocation instructions in
+  tool-agnostic form, for agents started inside the folder that read
+  `AGENTS.md` rather than discovering skills.
 
 ## Why this stack
 - **TypeScript/Node** — required by the task, ubiquitous runtime, no build

@@ -34,8 +34,7 @@ with a spike month in each, so neither is a reliable growth story. See the
 
 ## Setup
 
-Run every command in this README from this folder
-(`.claude/skills/wikipedia-trends/`).
+Run every command in this README from this folder, the skill directory.
 
 ```bash
 npm install
@@ -44,16 +43,20 @@ npm run build
 
 ## Using it with an agent
 
-The skill is this folder, `.claude/skills/wikipedia-trends/`. It is a plain CLI plus a
-`SKILL.md` that teaches the agent the workflow, so any agent that can run shell
-commands can use it.
+This folder is a self-contained [Agent Skill](https://agentskills.io/specification):
+`SKILL.md` teaches the agent the workflow, and a plain Node CLI does the data
+work, so any agent that can run shell commands can use it. Agents discover
+skills by folder, so install it by copying this folder into your agent's
+skills directory, then run the setup above in the copy:
 
-- **Claude Code / Claude Desktop:** open this repo; the skill is picked up
-  automatically from `.claude/skills/`. Just ask your question.
-- **Cursor, Codex, and other agents:** the root `AGENTS.md` points them at
-  `SKILL.md`. Run the setup above once, then ask your question.
-- **Another project:** copy the `.claude/skills/wikipedia-trends/` folder into
-  that project's `.claude/skills/` and run the setup there.
+```bash
+cp -r wikipedia-trends ~/.claude/skills/    # Claude Code
+cp -r wikipedia-trends ~/.agents/skills/    # Codex, Cursor, Gemini CLI, Copilot
+```
+
+For a single project, use `<project>/.claude/skills/` or
+`<project>/.agents/skills/` instead. Agents that read `AGENTS.md` also work
+when started inside this folder: `AGENTS.md` points them at `SKILL.md`.
 
 Tips for good answers:
 
@@ -81,8 +84,9 @@ The last command hits the live Wikimedia API. It should print JSON with growth
 numbers and flags, and write `test.pdf`. Open the PDF and check it has two
 charts and an "Assumptions & limitations" section.
 
-**2. An agent uses it (Claude Code).** Start Claude Code in the repo root and
-switch to the cheap model the brief targets:
+**2. An agent uses it (Claude Code).** Install the skill as described in
+[Using it with an agent](#using-it-with-an-agent), start Claude Code in any
+folder and switch to the cheap model the brief targets:
 
 ```
 claude
@@ -112,9 +116,8 @@ not available, for example claude.ai or Claude Code in another folder. The
 answer will be generic and have no real numbers. That gap is what the
 benchmark below measures.
 
-**4. Other agents.** In Cursor or Codex, open the repo; they read `AGENTS.md`,
-which points them to the skill. Ask the same questions and check the same
-things.
+**4. Other agents.** Install the skill into `~/.agents/skills/` and open any
+project in Cursor or Codex. Ask the same questions and check the same things.
 
 **5. Automated, on any model.** The eval harness drives a model through the
 same scenarios and scores it. To test a single model on a single case:

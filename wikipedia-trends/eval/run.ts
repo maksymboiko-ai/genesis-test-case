@@ -30,7 +30,7 @@ function loadCases(): Case[] {
 
 const SKILL_MD = readFileSync(join(SKILL_DIR, "SKILL.md"), "utf-8");
 
-const SKILL_SYSTEM_PROMPT = `You are an AI agent helping a B2C product team make decisions using Wikipedia pageview data. You have a "bash" tool whose working directory is already the wikipedia-trends skill directory (do NOT "cd .claude/skills/wikipedia-trends" -- you're already there; just run npm/node commands directly). Follow this SKILL.md exactly:\n\n${SKILL_MD}`;
+const SKILL_SYSTEM_PROMPT = `You are an AI agent helping a B2C product team make decisions using Wikipedia pageview data. You have a "bash" tool whose working directory is already the wikipedia-trends skill directory (do NOT cd anywhere -- you're already there; just run npm/node commands directly). Follow this SKILL.md exactly:\n\n${SKILL_MD}`;
 
 const NO_SKILL_SYSTEM_PROMPT =
   "You are a helpful assistant for a B2C product team. Answer their question as best you can using your own knowledge. You have no tools and no access to live data.";

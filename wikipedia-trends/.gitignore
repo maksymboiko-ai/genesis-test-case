@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+*.env
+*.log
+/cache/*.json
+!/cache/.gitkeep
+# ad-hoc PDF reports generated while testing the CLI/eval by hand
+/*.pdf
+/eval/*.pdf

@@ -4,16 +4,14 @@
 
 For any task involving Wikipedia pageview trends, topic-interest research
 across languages, or deciding which topic/locale a B2C product should invest
-in next, use the tool at `.claude/skills/wikipedia-trends/`. Full workflow
-guidance (how to phrase queries, how to read confidence flags into your
-conclusions, worked examples) lives in
-`.claude/skills/wikipedia-trends/SKILL.md` — read it before your first call
+in next, use the tool in this directory. Full workflow guidance (how to
+phrase queries, how to read confidence flags into your conclusions, worked
+examples) lives in `SKILL.md` next to this file — read it before your first call
 in a session; it applies whether you're Claude Code, Cursor, Codex, or any
 other shell-capable agent, not just Claude-specific tooling.
 
 Quick reference:
 ```
-cd .claude/skills/wikipedia-trends
 npm install && npm run build   # once per session
 node dist/cli.js analyze-and-report --topic "<name>" --langs <lang,lang,...> --out report.pdf
 node dist/cli.js <subcommand> --help   # for exact flags on any subcommand

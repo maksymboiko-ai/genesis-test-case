@@ -9,7 +9,7 @@ Each iteration:
    `ARCHITECTURE.md` first and noting why in the commit message.
 3. Self-measure before checking it off:
    - Code changes: `npm run build` and `npm test` must pass inside
-     `.claude/skills/wikipedia-trends/`.
+     `wikipedia-trends/`.
    - M6/M7 (eval) items: the eval run must actually have executed (not just
      be wired up) and produced a results file you can point to.
    - If a milestone item can't be verified (e.g. needs a live network call
