@@ -1,6 +1,7 @@
 ---
 name: wikipedia-trends
 description: Analyze Wikipedia pageview trends across topics and language editions to inform B2C product decisions (which topic to build next, which language to localize into). Fetches real pageview data from Wikimedia's public APIs, computes growth trends with confidence/reliability flags, and produces a one-page PDF report. Use for questions about topic interest over time, cross-language comparisons of interest, or whether a growth signal in Wikipedia traffic can be trusted.
+compatibility: Requires Node.js 20+, npm, and internet access to the Wikimedia and Wikidata APIs.
 ---
 
 # Wikipedia pageview trends
@@ -12,8 +13,10 @@ plain Node script you run with `node`.
 
 ## Setup (once per session)
 
+Run everything from this skill's directory (the one containing this
+SKILL.md):
+
 ```
-cd .claude/skills/wikipedia-trends
 npm install   # first time only; installs pdfkit + tsx/typescript
 npm run build # compiles src/ -> dist/
 ```
