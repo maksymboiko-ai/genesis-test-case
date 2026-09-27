@@ -28,9 +28,11 @@ and a tiered OpenRouter-based eval harness:
 Latest full run: 6 cases x 3 models (`openai/gpt-4o-mini`,
 `google/gemini-3.8-flash`, `anthropic/claude-haiku-4.5` -- the last being the
 model the task brief explicitly names) x skill/no-skill, 36 runs, 0%
-errored. Judge averages: factualAccuracy 4.6 vs 1.3, caveatAppropriateness
-4.2 vs 1.8, actionability 3.3 vs 1.9 (skill vs no-skill). See
-`eval/results/2026-09-23T08-00-55-397Z`.
+errored. Judge averages: factualAccuracy 4.5 vs 1.3, caveatAppropriateness
+4.4 vs 2.0, actionability 3.2 vs 1.7 (skill vs no-skill); stated trend
+direction matched real data in 15 of 15 skill runs vs 0 of 14 without. See
+`eval/results/2026-09-27T10-16-46-034Z` (the first run after the end-of-month
+request fix; the earlier 2026-09-23 runs used month-shifted data).
 
 ## What the eval run surfaced (already fixed, see git log)
 
@@ -46,10 +48,17 @@ errored. Judge averages: factualAccuracy 4.6 vs 1.3, caveatAppropriateness
 - A test case (`low-traffic-language`) that accidentally exercised "no
   article exists at all" instead of the intended "low-volume but present"
   scenario -> swapped topic.
-- Two genuine data-correctness bugs in the analysis itself (current-month
-  and even last-calendar-month pageview data can be partial/unprocessed at
-  Wikimedia) -> `trailingMonthLikelyIncomplete` flag, excluded from growth
-  math. Only findable by testing against live data, not synthetic fixtures.
+- Two data-correctness bugs in how we requested data, both found only
+  against live data: the window included the current, still-running month
+  (fixed by ending at the last complete month), and every request ended on
+  the 1st of its final month, which made Wikimedia count just one day for
+  that month (11 views instead of 360 for astronomy/uk in August 2026). The
+  second one was first misdiagnosed as "Wikimedia hasn't processed the month
+  yet" and patched with the `trailingMonthLikelyIncomplete` flag, which hid
+  it and shifted every YoY/MoM figure back a month. The real fix ends
+  requests on the month's last day, with a regression test. The flag stays
+  as a safeguard for the genuine lag in the first days of a month. Lesson:
+  when a fix is a heuristic that hides a symptom, check the request first.
 - A direction-matching heuristic that misread "growth ... decrease" as
   "growing" because it tested for the bare noun "growth" -> now excludes it,
   requires an actual directional verb/adjective.
