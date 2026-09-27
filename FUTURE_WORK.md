@@ -108,3 +108,106 @@ errored. Judge averages: factualAccuracy 4.6 vs 1.3, caveatAppropriateness
    already the right building blocks -- a thin wrapper that re-runs
    `analyze-and-report` on a schedule and diffs against the prior JSON
    result would get most of the way there without new architecture.
+
+## How to grow the skill past basic queries
+
+The skill answers basic queries today: one or a few named topics, a
+handful of languages, 24 months, monthly granularity. Growing it toward
+harder research questions and bigger data should go in small steps,
+using the same loop that got it this far (M6-M8).
+
+### The iteration loop
+
+1. **Write the harder question down as an eval case first.** Add a JSON
+   case under `eval/cases/` for the new kind of query (for example "which
+   of these 15 hobbies grew fastest across 8 Central European languages")
+   and extend `eval/groundtruth.ts` so it can compute the reference answer
+   without the CLI.
+2. **Run it with and without the skill, on several models.** Where it
+   fails, find out whether the tool lacks something (missing subcommand,
+   wrong math, rate limit) or the model misused it (didn't pass on a flag,
+   fetched the same data twice). Tool gaps get fixed in `src/`. Usage gaps
+   get fixed in `SKILL.md`, or better, in fields of the tool's JSON output
+   that the model has to pass on (see limitation 1).
+3. **Keep the case as a regression test,** and run each case several
+   times so the result is a pass rate, not one pass/fail. A new capability
+   is done when its case passes reliably and the older cases still pass.
+4. **Check against live data before trusting a fix.** Both real data bugs
+   so far only showed up against real Wikimedia responses, not fixtures.
+
+Each stage below is one or more runs of this loop.
+
+### Stage 1: more data per question
+
+Needed before anything else, because more complex research means more
+requests.
+
+- **Bounded concurrency.** `compare` starts every topic at once
+  (`Promise.all` in `cli.ts`) and fetches the languages of each topic one
+  after another. That is fine for 2-3 topics. For a 20x10 matrix it should
+  go through a small worker pool with a limit you can set, so throughput
+  stays predictable and `http.ts`'s 429 retries are the rare case, not the
+  normal one.
+- **Load-test `compare`** on a realistic matrix and record the time, the
+  request count and the number of 429s, so later changes can be measured.
+- **A lasting cache for finished months.** Pageviews for a closed month
+  don't change after Wikimedia has processed them, so they don't need the
+  24h TTL. Only the most recent month does. Keeping closed months
+  indefinitely (the same disk files, or SQLite once it grows) makes
+  follow-up and repeat research almost free.
+- **Keep the output small for the model.** A big matrix shouldn't dump
+  every monthly point into the model's context. Return a ranked summary
+  (top movers and flagged entries) by default and put the full data in a
+  file the model can open if it needs it.
+
+### Stage 2: better signal per topic
+
+The kind of question stays the same, but the answer is closer to how much
+interest the topic really gets.
+
+- **Redirects and related articles.** Per-article counts cover only the
+  exact title, so views that arrive through redirects or sit on closely
+  related articles (sub-topics, a local-language synonym) are missed.
+  Adding them into one "topic" series needs a link or redirect lookup and
+  a rule for what belongs to the topic. That rule should appear in the
+  output so the user can check it.
+- **Daily granularity** for event-driven questions (limitation 5). Spike
+  and gap flags need their own thresholds at daily resolution.
+- **Seasonality and significance.** Report year-over-year change next to
+  a simple seasonal baseline, and mark a growth figure as not significant
+  when it is within normal noise, not only when the volume is low.
+- **Mobile vs desktop split** (`access` in the REST path, currently
+  `all-access`) where the product decision depends on it.
+
+### Stage 3: open-ended research
+
+The user asks "what should we build next" instead of naming the topics.
+
+- **Topic discovery.** Build candidate lists from the Wikimedia
+  top-articles endpoint per language, or from a Wikidata SPARQL query (all
+  items of a class or category), then run them through the Stage 1
+  pipeline.
+- **Multi-step workflows in `SKILL.md`:** narrow the candidates, compare
+  them, look closer at the leaders, write the report. Each step should use
+  cached data from the step before. Eval cases for this should score the
+  final recommendation and how efficiently the tools were used
+  (limitation 4).
+- **Multi-page or multi-section reports** for comparisons across many
+  topics, keeping the one-page summary on top.
+
+### Stage 4: data volumes the REST API can't handle
+
+Past a few thousand articles per question, calling the API article by
+article is the wrong tool. Wikimedia publishes bulk pageview dumps
+(hourly/daily files covering all articles on every project). A batch job
+that loads the relevant months into a local columnar store (DuckDB or
+Parquet) and has the CLI read from it lets the skill answer questions over
+whole categories or languages without API limits. This is a separate
+ingestion component with its own storage and freshness concerns, so it
+should wait until an eval case shows the REST path can't do the job.
+
+Everything above keeps the current contract: the CLI returns structured
+JSON with confidence flags, and the model has to reflect those flags in its
+answer. New capabilities need new flags where their failure modes are
+different (for example "topic series includes N redirects", "significance
+not established").
