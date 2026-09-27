@@ -26,6 +26,15 @@ function toYyyymm(d: Date): string {
   return `${d.getUTCFullYear()}${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
 }
 
+/**
+ * The REST API counts a monthly bucket only up to the end timestamp, so ending
+ * on the 1st returns just one day for the last month. End on its last day.
+ */
+function endOfMonthStamp(d: Date): string {
+  const lastDay = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).getUTCDate();
+  return toYyyymm(d) + String(lastDay).padStart(2, "0");
+}
+
 /** Wikimedia REST timestamps are "YYYYMMDD00" for monthly granularity. */
 function timestampToMonth(ts: string): string {
   return `${ts.slice(0, 4)}-${ts.slice(4, 6)}`;
@@ -57,7 +66,7 @@ export async function fetchPerArticleMonthly(
   const project = toProjectId(lang);
   const encodedArticle = encodeURIComponent(article.replace(/ /g, "_"));
   const start = toYyyymm(range.start) + "01";
-  const end = toYyyymm(range.end) + "01";
+  const end = endOfMonthStamp(range.end);
   const url = `${REST_BASE}/per-article/${project}/all-access/user/${encodedArticle}/monthly/${start}/${end}`;
 
   try {
@@ -78,7 +87,7 @@ export async function fetchProjectAggregateMonthly(
 ): Promise<MonthlyPoint[]> {
   const project = toProjectId(lang);
   const start = toYyyymm(range.start) + "01";
-  const end = toYyyymm(range.end) + "01";
+  const end = endOfMonthStamp(range.end);
   const url = `${REST_BASE}/aggregate/${project}/all-access/user/monthly/${start}/${end}`;
 
   try {

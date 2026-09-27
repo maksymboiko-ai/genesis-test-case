@@ -54,6 +54,18 @@ test("fetchPerArticleMonthly returns [] on 404 instead of throwing", async () =>
   assert.deepEqual(points, []);
 });
 
+test("requests end on the last day of the final month so it isn't truncated to one day", async () => {
+  const urls: string[] = [];
+  globalThis.fetch = (async (url: string) => {
+    urls.push(String(url));
+    return { ok: true, status: 200, json: async () => ({ items: [] }) } as Response;
+  }) as typeof fetch;
+  const range = lastNMonths(3, new Date(Date.UTC(2026, 2, 10))); // Dec 2025 .. Feb 2026 (28 days)
+  await fetchPerArticleMonthly("pl", "Astronomia", range);
+  await fetchProjectAggregateMonthly("pl", range);
+  for (const url of urls) assert.ok(url.endsWith("/monthly/20251201/20260228"), url);
+});
+
 test("fetchProjectAggregateMonthly parses aggregate totals", async () => {
   mockFetchOnce(200, {
     items: [{ timestamp: "2025010100", views: 5_000_000 }],
