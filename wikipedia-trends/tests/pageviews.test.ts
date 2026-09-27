@@ -5,7 +5,7 @@ import {
   fetchProjectAggregateMonthly,
   lastNMonths,
   toProjectId,
-} from "./pageviews.js";
+} from "../scripts/pageviews.js";
 
 const originalFetch = globalThis.fetch;
 

@@ -135,7 +135,7 @@ using the same loop that got it this far (M6-M8).
 2. **Run it with and without the skill, on several models.** Where it
    fails, find out whether the tool lacks something (missing subcommand,
    wrong math, rate limit) or the model misused it (didn't pass on a flag,
-   fetched the same data twice). Tool gaps get fixed in `src/`. Usage gaps
+   fetched the same data twice). Tool gaps get fixed in `scripts/`. Usage gaps
    get fixed in `SKILL.md`, or better, in fields of the tool's JSON output
    that the model has to pass on (see limitation 1).
 3. **Keep the case as a regression test,** and run each case several

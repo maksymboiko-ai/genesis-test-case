@@ -16,7 +16,7 @@ equivalents).
 - `SKILL.md` — spec frontmatter + instructions, discovered by any Agent
   Skills client (Claude Code, Codex, Cursor, Gemini CLI, Copilot, ...).
 - Everything the skill needs to *do real work* is a plain Node/TypeScript CLI
-  inside that same directory (`src/cli.ts` → built to `dist/cli.js`), invoked
+  inside that same directory (`scripts/cli.ts` → built to `dist/cli.js`), invoked
   via ordinary shell commands (`node dist/cli.js <subcommand> ...`). It has no
   dependency on any Claude-specific tool — any agent that can run shell
   commands can drive it.

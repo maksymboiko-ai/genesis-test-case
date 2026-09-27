@@ -18,7 +18,7 @@ SKILL.md):
 
 ```
 npm install   # first time only; installs pdfkit + tsx/typescript
-npm run build # compiles src/ -> dist/
+npm run build # compiles scripts/ -> dist/
 ```
 
 After that, every call is `node dist/cli.js <subcommand> --flags`.

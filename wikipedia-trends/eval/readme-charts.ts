@@ -4,14 +4,14 @@
 // the example trend and PDF come from live Wikimedia data.
 import { readFileSync, readdirSync, writeFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
-import { resolveTopic } from "../src/wikidata.js";
-import { fetchPerArticleMonthly, fetchProjectAggregateMonthly, lastNMonths } from "../src/pageviews.js";
-import { normalizeAgainstBaseline, type ComparisonEntry } from "../src/analyze.js";
-import { generateReport } from "../src/report.js";
+import { resolveTopic } from "../scripts/wikidata.js";
+import { fetchPerArticleMonthly, fetchProjectAggregateMonthly, lastNMonths } from "../scripts/pageviews.js";
+import { normalizeAgainstBaseline, type ComparisonEntry } from "../scripts/analyze.js";
+import { generateReport } from "../scripts/report.js";
 
 const SKILL_DIR = join(import.meta.dirname, "..");
 const RESULTS_DIR = join(SKILL_DIR, "eval", "results");
-const DOCS_DIR = join(SKILL_DIR, "docs");
+const DOCS_DIR = join(SKILL_DIR, "assets");
 
 // Reference palette (validated light + dark with the dataviz validator).
 const STYLE = `<style>

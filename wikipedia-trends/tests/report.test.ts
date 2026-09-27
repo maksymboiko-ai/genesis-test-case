@@ -3,9 +3,9 @@ import assert from "node:assert/strict";
 import { mkdtempSync, rmSync, statSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { generateReport } from "./report.js";
-import { normalizeAgainstBaseline, type ComparisonEntry } from "./analyze.js";
-import type { MonthlyPoint } from "./pageviews.js";
+import { generateReport } from "../scripts/report.js";
+import { normalizeAgainstBaseline, type ComparisonEntry } from "../scripts/analyze.js";
+import type { MonthlyPoint } from "../scripts/pageviews.js";
 
 function monthsFrom(start: string, n: number): string[] {
   const [y, m] = start.split("-").map(Number);

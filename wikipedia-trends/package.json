@@ -9,10 +9,10 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "node --import tsx --test src/**/*.test.ts",
-    "cli": "tsx src/cli.ts",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "cli": "tsx scripts/cli.ts",
     "eval": "tsx eval/run.ts",
-    "docs:charts": "tsx scripts/readme-charts.ts"
+    "docs:charts": "tsx eval/readme-charts.ts"
   },
   "dependencies": {
     "pdfkit": "^0.15.0"

@@ -1,6 +1,6 @@
 import { test, afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { searchEntities, getArticleTitles, resolveTopic } from "./wikidata.js";
+import { searchEntities, getArticleTitles, resolveTopic } from "../scripts/wikidata.js";
 
 const originalFetch = globalThis.fetch;
 

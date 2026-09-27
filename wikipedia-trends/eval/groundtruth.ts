@@ -2,9 +2,9 @@
 // project's own data/analysis modules directly (not the CLI subprocess, and
 // not cached alongside the CLI's own cache -- this always hits fresh data so
 // it can't silently agree with a stale bug in the CLI's cache layer).
-import { resolveTopic } from "../src/wikidata.js";
-import { fetchPerArticleMonthly, fetchProjectAggregateMonthly, lastNMonths } from "../src/pageviews.js";
-import { normalizeAgainstBaseline, type ComparisonEntry } from "../src/analyze.js";
+import { resolveTopic } from "../scripts/wikidata.js";
+import { fetchPerArticleMonthly, fetchProjectAggregateMonthly, lastNMonths } from "../scripts/pageviews.js";
+import { normalizeAgainstBaseline, type ComparisonEntry } from "../scripts/analyze.js";
 
 export interface GroundTruthSpec {
   topic: string;

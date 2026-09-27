@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { DiskCache } from "./cache.js";
+import { DiskCache } from "../scripts/cache.js";
 
 function withTempCache(fn: (cache: DiskCache) => void | Promise<void>) {
   const dir = mkdtempSync(join(tmpdir(), "wt-cache-"));

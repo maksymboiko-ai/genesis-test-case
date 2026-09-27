@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { analyzeTrend, normalizeAgainstBaseline } from "./analyze.js";
-import type { MonthlyPoint } from "./pageviews.js";
+import { analyzeTrend, normalizeAgainstBaseline } from "../scripts/analyze.js";
+import type { MonthlyPoint } from "../scripts/pageviews.js";
 
 function series(months: string[], views: number[]): MonthlyPoint[] {
   return months.map((month, i) => ({ month, views: views[i] }));

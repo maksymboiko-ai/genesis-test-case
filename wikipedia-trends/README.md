@@ -9,13 +9,13 @@ can share.
 > Pageviews measure interest in an article, not willingness to pay. Treat the
 > output as a signal for what to validate next, not a decision by itself.
 
-![Line chart of monthly astronomy pageviews per million views of each edition, Polish vs Ukrainian Wikipedia, September 2024 to August 2026. Ukrainian starts high at about 63 and falls to about 7; Polish stays between about 5 and 17.](docs/example-trend.svg)
+![Line chart of monthly astronomy pageviews per million views of each edition, Polish vs Ukrainian Wikipedia, September 2024 to August 2026. Ukrainian starts high at about 63 and falls to about 7; Polish stays between about 5 and 17.](assets/example-trend.svg)
 
 This is the kind of trend the skill works from, here with real data for
 astronomy in Polish and Ukrainian Wikipedia. The skill turns it into numbers
 with caveats. In this case: down about 5% year over year in both editions,
 with a spike month in each, so neither is a reliable growth story. See the
-[example one-page report](docs/example-report.pdf) it generates.
+[example one-page report](assets/example-report.pdf) it generates.
 
 ## What you can ask
 
@@ -170,7 +170,7 @@ small language edition, and a follow-up) on three cheap models, once with the
 skill and once without, and scored every answer. See
 [Evaluation benchmark](#evaluation-benchmark) for how.
 
-![Grouped bar chart of LLM-judge scores from 1 to 5. Factual accuracy: 4.5 with the skill vs 1.3 without. Caveat appropriateness: 4.4 vs 2.0. Actionability: 3.2 vs 1.7.](docs/eval-judge-scores.svg)
+![Grouped bar chart of LLM-judge scores from 1 to 5. Factual accuracy: 4.5 with the skill vs 1.3 without. Caveat appropriateness: 4.4 vs 2.0. Actionability: 3.2 vs 1.7.](assets/eval-judge-scores.svg)
 
 | Metric | With skill | Without skill |
 |---|---|---|
@@ -185,7 +185,7 @@ The direction row is the starkest. Most of these topics are declining year over
 year. Without the skill, models answered from memory, said "growing", and were
 wrong every time they stated a direction.
 
-![Grouped bar chart of the mean judge score per model. gpt-4o-mini: 3.7 with the skill vs 1.2 without. gemini-3.8-flash: 3.9 vs 1.8. claude-haiku-4.5: 4.5 vs 2.1.](docs/eval-by-model.svg)
+![Grouped bar chart of the mean judge score per model. gpt-4o-mini: 3.7 with the skill vs 1.2 without. gemini-3.8-flash: 3.9 vs 1.8. claude-haiku-4.5: 4.5 vs 2.1.](assets/eval-by-model.svg)
 
 | Model | With skill | Without skill |
 |---|---|---|
@@ -202,7 +202,7 @@ trend and its caveats well but are less specific about next steps. Source run:
 
 ```bash
 npm test          # unit tests, no network needed
-npm run build     # compile src/ to dist/
+npm run build     # compile scripts/ to dist/
 ```
 
 ### Evaluation benchmark
@@ -224,7 +224,7 @@ independently from live data, rubric checks (ambiguity disclosure, flags
 surfaced), and an LLM judge scoring factual accuracy, caveat appropriateness and
 actionability. Results are written to `eval/results/`.
 
-After a new run, regenerate the charts and example report in `docs/` with
+After a new run, regenerate the charts and example report in `assets/` with
 `npm run docs:charts`. It uses the latest judged results file and live data for
 the example.
 
