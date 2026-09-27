@@ -9,6 +9,14 @@ can share.
 > Pageviews measure interest in an article, not willingness to pay. Treat the
 > output as a signal for what to validate next, not a decision by itself.
 
+![Line chart of monthly astronomy pageviews per million views of each edition, Polish vs Ukrainian Wikipedia, September 2024 to August 2026. Ukrainian starts high at about 63 and falls to about 7; Polish stays between about 5 and 17.](docs/example-trend.svg)
+
+This is the kind of trend the skill works from, here with real data for
+astronomy in Polish and Ukrainian Wikipedia. The skill turns it into numbers
+with caveats. In this case: down about 5% year over year in both editions,
+with a spike month in each, so neither is a reliable growth story. See the
+[example one-page report](docs/example-report.pdf) it generates.
+
 ## What you can ask
 
 - "Compare growth of interest in intermittent fasting in Polish and Czech
@@ -57,6 +65,66 @@ Tips for good answers:
 - If a topic name is ambiguous (for example "Mercury"), the agent should tell
   you which meaning it used. If it does not, say so and ask it to re-check.
 
+## Test it yourself
+
+Work through these in order; each step checks more of the system than the last.
+
+**1. The code works (1 minute, no API keys).**
+
+```bash
+npm install && npm run build
+npm test                                   # 28 unit tests, no network
+node dist/cli.js analyze-and-report --topic "astronomy" --langs uk,pl --out test.pdf
+```
+
+The last command hits the live Wikimedia API. It should print JSON with growth
+numbers and flags, and write `test.pdf`. Open the PDF and check it has two
+charts and an "Assumptions & limitations" section.
+
+**2. An agent uses it (Claude Code).** Start Claude Code in the repo root and
+switch to the cheap model the brief targets:
+
+```
+claude
+/model haiku
+```
+
+Then ask one of the questions from [What you can ask](#what-you-can-ask). What
+to look for in the answer:
+
+- It ran `node dist/cli.js ...` commands rather than answering from memory.
+- The numbers it quotes match the JSON the CLI printed.
+- It names the confidence flags that apply (for example, a spike month) instead
+  of presenting a noisy trend as certain.
+- It wrote a PDF when you asked for a report.
+
+Then try the edge cases:
+
+- **Ambiguous topic:** "Is interest in Mercury growing in German Wikipedia?"
+  It should say which Mercury it analyzed.
+- **Small edition:** "Is interest in chess growing in Icelandic Wikipedia?" It
+  should warn that the numbers are noisy.
+- **Follow-up:** after any answer, "now add Polish and extend to 3 years." It
+  should reuse the earlier data rather than start from scratch.
+
+**3. Compare against no skill.** Ask the same question somewhere the skill is
+not available, for example claude.ai or Claude Code in another folder. The
+answer will be generic and have no real numbers. That gap is what the
+benchmark below measures.
+
+**4. Other agents.** In Cursor or Codex, open the repo; they read `AGENTS.md`,
+which points them to the skill. Ask the same questions and check the same
+things.
+
+**5. Automated, on any model.** The eval harness drives a model through the
+same scenarios and scores it. To test a single model on a single case:
+
+```bash
+EVAL_MODELS=anthropic/claude-haiku-4.5 npx tsx eval/run.ts astronomy-trust
+```
+
+See [Evaluation benchmark](#evaluation-benchmark) for setup.
+
 ## Using the CLI directly
 
 ```bash
@@ -92,6 +160,41 @@ Growth is reported raw and also normalized as a share of the whole language
 edition's traffic, so a growing edition does not masquerade as growing interest
 in your topic. Prefer the normalized numbers when comparing languages.
 
+## How well it works
+
+We ran each of 6 scenarios (the three questions above, an ambiguous topic, a
+small language edition, and a follow-up) on three cheap models, once with the
+skill and once without, and scored every answer. See
+[Evaluation benchmark](#evaluation-benchmark) for how.
+
+![Grouped bar chart of LLM-judge scores from 1 to 5. Factual accuracy: 4.5 with the skill vs 1.3 without. Caveat appropriateness: 4.4 vs 2.0. Actionability: 3.2 vs 1.7.](docs/eval-judge-scores.svg)
+
+| Metric | With skill | Without skill |
+|---|---|---|
+| Factual accuracy (judge, 1–5) | 4.5 | 1.3 |
+| Caveat appropriateness (judge, 1–5) | 4.4 | 2.0 |
+| Actionability (judge, 1–5) | 3.2 | 1.7 |
+| Answer grounded in fetched data | 94% | 0% |
+| Stated trend direction matches real data | 15 of 15 | 0 of 14 |
+| Runs | 18 | 18 |
+
+The direction row is the starkest. Most of these topics are declining year over
+year. Without the skill, models answered from memory, said "growing", and were
+wrong every time they stated a direction.
+
+![Grouped bar chart of the mean judge score per model. gpt-4o-mini: 3.7 with the skill vs 1.2 without. gemini-3.8-flash: 3.9 vs 1.8. claude-haiku-4.5: 4.5 vs 2.1.](docs/eval-by-model.svg)
+
+| Model | With skill | Without skill |
+|---|---|---|
+| gpt-4o-mini | 3.7 | 1.2 |
+| gemini-3.8-flash | 3.9 | 1.8 |
+| claude-haiku-4.5 | 4.5 | 2.1 |
+
+Judge: `anthropic/claude-sonnet-5`, which is not one of the models under test.
+Actionability is the weakest dimension even with the skill: answers state the
+trend and its caveats well but are less specific about next steps. Source run:
+`eval/results/2026-09-27T10-16-46-034Z`.
+
 ## Development
 
 ```bash
@@ -117,6 +220,10 @@ Scoring has three tiers: deterministic checks against ground truth computed
 independently from live data, rubric checks (ambiguity disclosure, flags
 surfaced), and an LLM judge scoring factual accuracy, caveat appropriateness and
 actionability. Results are written to `eval/results/`.
+
+After a new run, regenerate the charts and example report in `docs/` with
+`npm run docs:charts`. It uses the latest judged results file and live data for
+the example.
 
 Warning: the eval lets a remote model run shell commands through a bash tool
 guarded only by a denylist, with no container isolation. Run it supervised, on a

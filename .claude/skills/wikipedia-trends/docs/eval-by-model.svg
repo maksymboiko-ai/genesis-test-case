@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="306" viewBox="0 0 720 306" role="img" aria-labelledby="t d">
+<title id="t">The gain holds for every cheap model tested</title><desc id="d">gpt-4o-mini: with skill 3.7, without 1.2; gemini-3.8-flash: with skill 3.9, without 1.8; claude-haiku-4.5: with skill 4.5, without 2.1</desc>
+<style>
+text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.bg{fill:#fcfcfb}.t1{fill:#0b0b0b}.t2{fill:#52514e}.mut{fill:#898781}
+.grid{stroke:#e1e0d9}.axis{stroke:#c3c2b7}
+.s1{fill:#2a78d6}.s2{fill:#eb6834}.l1{stroke:#2a78d6}.l2{stroke:#eb6834}.ring{stroke:#fcfcfb}
+@media (prefers-color-scheme:dark){
+.bg{fill:#1a1a19}.t1{fill:#ffffff}.t2{fill:#c3c2b7}
+.grid{stroke:#2c2c2a}.axis{stroke:#383835}
+.s1{fill:#3987e5}.s2{fill:#d95926}.l1{stroke:#3987e5}.l2{stroke:#d95926}.ring{stroke:#1a1a19}}
+</style>
+<rect class="bg" width="720" height="306" rx="8"/>
+<text class="t1" x="24" y="34" font-size="17" font-weight="600">The gain holds for every cheap model tested</text>
+<text class="t2" x="24" y="55" font-size="12.5">Mean of the three judge dimensions (1–5) per model, 6 cases each</text>
+<rect class="s1" x="24" y="69" width="10" height="10" rx="2"/><text class="t2" x="39" y="78" font-size="12">With skill</text>
+<rect class="s2" x="126.2" y="69" width="10" height="10" rx="2"/><text class="t2" x="141.2" y="78" font-size="12">Without skill</text>
+<line class="axis" x1="200" y1="86" x2="200" y2="268" stroke-width="1"/>
+<text class="mut" x="200" y="286" font-size="11" text-anchor="middle">0.0</text>
+<line class="grid" x1="294" y1="86" x2="294" y2="268" stroke-width="1"/>
+<text class="mut" x="294" y="286" font-size="11" text-anchor="middle">1.0</text>
+<line class="grid" x1="388" y1="86" x2="388" y2="268" stroke-width="1"/>
+<text class="mut" x="388" y="286" font-size="11" text-anchor="middle">2.0</text>
+<line class="grid" x1="482" y1="86" x2="482" y2="268" stroke-width="1"/>
+<text class="mut" x="482" y="286" font-size="11" text-anchor="middle">3.0</text>
+<line class="grid" x1="576" y1="86" x2="576" y2="268" stroke-width="1"/>
+<text class="mut" x="576" y="286" font-size="11" text-anchor="middle">4.0</text>
+<line class="grid" x1="670" y1="86" x2="670" y2="268" stroke-width="1"/>
+<text class="mut" x="670" y="286" font-size="11" text-anchor="middle">5.0</text>
+<text class="t1" x="190" y="117" font-size="13" text-anchor="end">gpt-4o-mini</text>
+<path class="s1" d="M200,92h345.8888888888889a4,4 0 0 1 4,4v12a4,4 0 0 1 -4,4h-345.8888888888889z"/>
+<text class="t2" x="555.8888888888889" y="106" font-size="12">3.7</text>
+<path class="s2" d="M200,114h105.66666666666663a4,4 0 0 1 4,4v12a4,4 0 0 1 -4,4h-105.66666666666663z"/>
+<text class="t2" x="315.66666666666663" y="128" font-size="12">1.2</text>
+<text class="t1" x="190" y="181" font-size="13" text-anchor="end">gemini-3.8-flash</text>
+<path class="s1" d="M200,156h359.4666666666666a4,4 0 0 1 4,4v12a4,4 0 0 1 -4,4h-359.4666666666666z"/>
+<text class="t2" x="569.4666666666666" y="170" font-size="12">3.9</text>
+<path class="s2" d="M200,178h163.1111111111111a4,4 0 0 1 4,4v12a4,4 0 0 1 -4,4h-163.1111111111111z"/>
+<text class="t2" x="373.1111111111111" y="192" font-size="12">1.8</text>
+<text class="t1" x="190" y="245" font-size="13" text-anchor="end">claude-haiku-4.5</text>
+<path class="s1" d="M200,220h419a4,4 0 0 1 4,4v12a4,4 0 0 1 -4,4h-419z"/>
+<text class="t2" x="629" y="234" font-size="12">4.5</text>
+<path class="s2" d="M200,242h189.22222222222223a4,4 0 0 1 4,4v12a4,4 0 0 1 -4,4h-189.22222222222223z"/>
+<text class="t2" x="399.22222222222223" y="256" font-size="12">2.1</text>
+</svg>
