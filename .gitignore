@@ -10,3 +10,5 @@ dist/
 .claude/skills/wikipedia-trends/eval/*.pdf
 # runtime harness state, not project content
 .claude/scheduled_tasks.lock
+# CodeGraph index -- local to each machine
+.codegraph/
