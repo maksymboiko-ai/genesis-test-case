@@ -26,15 +26,17 @@ can share.
 
 ## Setup
 
+Run every command in this README from this folder
+(`.claude/skills/wikipedia-trends/`).
+
 ```bash
-cd .claude/skills/wikipedia-trends
 npm install
 npm run build
 ```
 
 ## Using it with an agent
 
-The skill lives in `.claude/skills/wikipedia-trends/`. It is a plain CLI plus a
+The skill is this folder, `.claude/skills/wikipedia-trends/`. It is a plain CLI plus a
 `SKILL.md` that teaches the agent the workflow, so any agent that can run shell
 commands can use it.
 
@@ -58,8 +60,6 @@ Tips for good answers:
 ## Using the CLI directly
 
 ```bash
-cd .claude/skills/wikipedia-trends
-
 # One shot: resolve, analyze, and write a one-page PDF
 node dist/cli.js analyze-and-report \
   --topic "astronomy" --langs uk,pl --months 24 --out astronomy.pdf
@@ -95,7 +95,6 @@ in your topic. Prefer the normalized numbers when comparing languages.
 ## Development
 
 ```bash
-cd .claude/skills/wikipedia-trends
 npm test          # unit tests, no network needed
 npm run build     # compile src/ to dist/
 ```
@@ -106,7 +105,6 @@ npm run build     # compile src/ to dist/
 without it. It needs an OpenRouter key:
 
 ```bash
-cd .claude/skills/wikipedia-trends
 echo "OPENROUTER_API_KEY=sk-or-..." > .env     # git-ignored
 npm run eval                                    # full matrix
 npx tsx eval/run.ts astronomy-trust             # a single case
@@ -129,4 +127,4 @@ machine you are comfortable with.
 - `ARCHITECTURE.md`: design decisions
 - `MILESTONES.md`: build plan and status
 - `FUTURE_WORK.md`: known limitations and how to extend the skill
-- `.claude/skills/wikipedia-trends/SKILL.md`: the agent-facing workflow
+- `SKILL.md`: the agent-facing workflow
